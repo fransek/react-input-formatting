@@ -1,3 +1,15 @@
+# 1.0.0-next.1 (2026-01-23)
+
+
+### Bug Fixes
+
+* package.json url fix ([#4](https://github.com/fransek/react-input-formatter/issues/4)) ([c24e22b](https://github.com/fransek/react-input-formatter/commit/c24e22b3fa813acb21310bd2f7d85bd4afb0d929))
+
+
+### Features
+
+* version one ([#1](https://github.com/fransek/react-input-formatter/issues/1)) ([3352266](https://github.com/fransek/react-input-formatter/commit/3352266b1f6b13bf54a36d121ef0179726672c69))
+
 ## [1.0.2](https://github.com/fransek/package-template/compare/v1.0.1...v1.0.2) (2026-01-23)
 
 
