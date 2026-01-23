@@ -6,13 +6,13 @@
   "license": "MIT",
   "description": "Package template for TypeScript packages",
   "keywords": [],
-  "homepage": "https://github.com/react-input-formatter#readme",
+  "homepage": "https://github.com/fransek/react-input-formatter#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/react-input-formatter"
+    "url": "git+https://github.com/fransek/react-input-formatter"
   },
   "bugs": {
-    "url": "https://github.com/react-input-formatter/issues"
+    "url": "https://github.com/fransek/react-input-formatter/issues"
   },
   "files": [
     "dist"
