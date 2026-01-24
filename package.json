@@ -1,18 +1,18 @@
 {
-  "name": "react-input-formatter",
-  "version": "1.0.0-next.1",
+  "name": "react-format-input",
+  "version": "0.1.0",
   "private": false,
   "author": "Frans Ekman <fransedvinekman@gmail.com>",
   "license": "MIT",
   "description": "Package template for TypeScript packages",
   "keywords": [],
-  "homepage": "https://github.com/fransek/react-input-formatter#readme",
+  "homepage": "https://github.com/fransek/react-format-input#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fransek/react-input-formatter"
+    "url": "git+https://github.com/fransek/react-format-input"
   },
   "bugs": {
-    "url": "https://github.com/fransek/react-input-formatter/issues"
+    "url": "https://github.com/fransek/react-format-input/issues"
   },
   "files": [
     "dist"
