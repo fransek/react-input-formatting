@@ -1,3 +1,10 @@
+# [1.0.0-next.2](https://github.com/fransek/react-format-input/compare/v1.0.0-next.1...v1.0.0-next.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* package name change ([#5](https://github.com/fransek/react-format-input/issues/5)) ([50d27e0](https://github.com/fransek/react-format-input/commit/50d27e0386abf5e9c60bec807fa1c8322673ceb9))
+
 # 1.0.0-next.1 (2026-01-23)
 
 
