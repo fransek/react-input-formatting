@@ -1,3 +1,16 @@
+# 1.0.0 (2026-01-24)
+
+
+### Bug Fixes
+
+* package name change ([#5](https://github.com/fransek/react-input-formatting/issues/5)) ([51f1a4e](https://github.com/fransek/react-input-formatting/commit/51f1a4eabb872ac6d167163111371a14b15b7ff6))
+* package.json url fix ([#4](https://github.com/fransek/react-input-formatting/issues/4)) ([40075b4](https://github.com/fransek/react-input-formatting/commit/40075b41c791f7726802bd97ce1281b9f752f61e))
+
+
+### Features
+
+* version one ([#1](https://github.com/fransek/react-input-formatting/issues/1)) ([9fb671d](https://github.com/fransek/react-input-formatting/commit/9fb671dcac6346687b0850b96f1a5913bf06c95a))
+
 # 1.0.0-next.1 (2026-01-24)
 
 
