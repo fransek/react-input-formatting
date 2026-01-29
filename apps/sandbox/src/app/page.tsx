@@ -12,11 +12,11 @@ export default function Home() {
       <label htmlFor="formatted">Formatted: </label>
       <input
         id="formatted"
-        className="border  rounded px-1"
+        className="border rounded px-1"
         value={input.formatted}
-        onChange={(e) => setInput(formatAndPositionCaret(e))}
+        onChange={(e) => setInput(formatAndPositionCaret(e.target))}
       />
-      <div>Raw: "{input.raw}"</div>
+      <div>Raw: &quot;{input.raw}&quot;</div>
       <div>Parsed: {input.parsed}</div>
     </div>
   );
