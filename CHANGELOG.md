@@ -56,6 +56,13 @@
 
 * version one ([#1](https://github.com/fransek/react-input-formatter/issues/1)) ([3352266](https://github.com/fransek/react-input-formatter/commit/3352266b1f6b13bf54a36d121ef0179726672c69))
 
+## [0.1.1](https://github.com/fransek/react-input-formatting/compare/v0.1.0...v0.1.1) (2026-01-29)
+
+
+### Bug Fixes
+
+* removed .releaserc.json ([690a690](https://github.com/fransek/react-input-formatting/commit/690a690cd40e506e3f54dabd1bac405abad83274))
+
 ## [1.0.2](https://github.com/fransek/package-template/compare/v1.0.1...v1.0.2) (2026-01-23)
 
 
