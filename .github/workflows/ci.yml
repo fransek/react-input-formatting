@@ -12,11 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Run tests
         run: pnpm run coverage
 
@@ -25,16 +28,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
+
       - name: Install dependencies
         run: pnpm install
+
       - name: ESLint
         run: pnpm run lint
+
       - name: Typescript
         if: always()
         run: pnpm tsc --noEmit -p tsconfig.json
+
       - name: Prettier
         if: always()
         run: pnpm prettier --check src
