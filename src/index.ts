@@ -1,8 +1,7 @@
 export interface InputState {
   raw: string;
   formatted: string;
-  parsed: number;
-  isValid: boolean;
+  parsed: number | undefined;
 }
 
 export function format(
@@ -20,51 +19,74 @@ export function unformat(
   thousandSeparator = ",",
   decimalSeparator = ".",
 ) {
-  return formatted
+  let result = formatted
     .replaceAll(thousandSeparator, "")
-    .replace(decimalSeparator, ".");
+    .replaceAll(decimalSeparator, ".")
+    .replaceAll(/[^\d.-]/g, "") // Remove invalid characters
+    .replaceAll(/(?!^)-/g, ""); // Remove misplaced minus signs
+
+  const [int, ...frac] = result.split(".");
+  if (frac.length > 0) {
+    result = int + "." + frac.join("");
+  }
+
+  if (result.startsWith(".")) {
+    result = "0" + result;
+  } else if (result.startsWith("-.")) {
+    result = "-0" + result.substring(1);
+  }
+
+  return result;
+}
+
+export function parse(raw: string): number | undefined {
+  if (raw === "" || raw === "-" || raw === ".") {
+    return undefined;
+  }
+  const parsed = Number(raw);
+  return Number.isNaN(parsed) ? undefined : parsed;
 }
 
 export function formatAndPositionCaret(
-  e: React.ChangeEvent<HTMLInputElement>,
+  target: HTMLInputElement,
   thousandSeparator = ",",
   decimalSeparator = ".",
 ): InputState {
-  const value = e.target.value;
+  const value = target.value;
   const raw = unformat(value, thousandSeparator, decimalSeparator);
   const formatted = format(raw, thousandSeparator, decimalSeparator);
-  const parsed = Number(raw);
-  const isValid = !Number.isNaN(parsed);
+  const parsed = parse(raw);
 
-  const caretPos = e.target.selectionStart ?? 0;
+  const caretPos = target.selectionStart ?? 0;
 
-  const previousSubstring = value.substring(0, caretPos);
-  const newSubstring = formatted.substring(0, caretPos);
+  const calculateCaretOffset = (value: string) => {
+    const beforeCaret = value.substring(0, caretPos);
+    const beforeCaretRaw = unformat(
+      beforeCaret,
+      thousandSeparator,
+      decimalSeparator,
+    );
+    return beforeCaret.length - beforeCaretRaw.length;
+  };
 
-  const previousSeparatorCount =
-    previousSubstring.split(thousandSeparator).length - 1;
-  const newSeparatorCount = newSubstring.split(thousandSeparator).length - 1;
+  const prevCaretOffset = calculateCaretOffset(value);
+  const nextCaretOffset = calculateCaretOffset(formatted);
 
-  const offset = newSeparatorCount - previousSeparatorCount;
+  const offset = nextCaretOffset - prevCaretOffset;
+  const newPos = caretPos + offset;
 
-  requestAnimationFrame(() => {
-    e.target.setSelectionRange(caretPos + offset, caretPos + offset);
-  });
+  requestAnimationFrame(() => target.setSelectionRange(newPos, newPos));
 
   return {
     formatted,
     raw,
     parsed,
-    isValid,
   };
 }
 
 export function createFormat(thousandSeparator = ",", decimalSeparator = ".") {
   if (thousandSeparator === decimalSeparator) {
     throw new Error("Thousand and decimal separators must be different.");
-  }
-  if (thousandSeparator.length !== 1 || decimalSeparator.length !== 1) {
-    throw new Error("Separators must be a single character.");
   }
   if (thousandSeparator === "-" || decimalSeparator === "-") {
     throw new Error('Separators cannot be the minus sign ("-").');
@@ -74,19 +96,15 @@ export function createFormat(thousandSeparator = ",", decimalSeparator = ".") {
     format: (raw: string) => format(raw, thousandSeparator, decimalSeparator),
     parse: (formatted: string) =>
       unformat(formatted, thousandSeparator, decimalSeparator),
-    formatAndPositionCaret: (
-      e: React.ChangeEvent<HTMLInputElement>,
-    ): InputState =>
-      formatAndPositionCaret(e, thousandSeparator, decimalSeparator),
+    formatAndPositionCaret: (target: HTMLInputElement): InputState =>
+      formatAndPositionCaret(target, thousandSeparator, decimalSeparator),
     initializeState: (raw: string): InputState => {
       const formatted = format(raw, thousandSeparator, decimalSeparator);
-      const parsed = Number(raw);
-      const isValid = !Number.isNaN(parsed);
+      const parsed = parse(raw);
       return {
         raw,
         formatted,
         parsed,
-        isValid,
       };
     },
   };
