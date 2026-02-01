@@ -3,20 +3,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it } from "vitest";
-import { formatAndPositionCaret } from ".";
+import { FormattedInput } from ".";
 
 const Input = () => {
-  return (
-    <input
-      data-testid="formatted-input"
-      onChange={(e) => {
-        e.target.value = formatAndPositionCaret(e.target).formatted;
-      }}
-    />
-  );
+  return <FormattedInput data-testid="formatted-input" />;
 };
 
-describe("formatAndPositionCaret", () => {
+describe("FormattedInput", () => {
   render(<Input />);
   const input = screen.getByTestId("formatted-input") as HTMLInputElement;
 

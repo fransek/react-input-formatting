@@ -14,9 +14,9 @@ describe("format", () => {
     { input: "123.", expected: "123." },
     { input: "", expected: "" },
   ])(
-    "format($input, $thousandSeparator, $decimalSeparator) should return $expected",
+    "should return $expected for input: $input, thousandSeparator: $thousandSeparator, decimalSeparator: $decimalSeparator",
     ({ input, thousandSeparator, decimalSeparator, expected }) => {
-      const result = format(input, thousandSeparator, decimalSeparator);
+      const result = format(input, { thousandSeparator, decimalSeparator });
       expect(result).toBe(expected);
     },
   );
@@ -43,9 +43,9 @@ describe("unformat", () => {
     { input: "123..", expected: "123." },
     { input: "123.456.789", expected: "123.456789" },
   ])(
-    "unformat($input, $thousandSeparator, $decimalSeparator) should return $expected",
+    "should return $expected for input: $input, thousandSeparator: $thousandSeparator, decimalSeparator: $decimalSeparator",
     ({ input, thousandSeparator, decimalSeparator, expected }) => {
-      const result = unformat(input, thousandSeparator, decimalSeparator);
+      const result = unformat(input, { thousandSeparator, decimalSeparator });
       expect(result).toBe(expected);
     },
   );
@@ -64,7 +64,7 @@ describe("parse", () => {
     { input: "-", expected: undefined },
     { input: ".", expected: undefined },
     { input: "", expected: undefined },
-  ])("parse($input) should return $expected", ({ input, expected }) => {
+  ])("should return $expected for input: $input", ({ input, expected }) => {
     const result = parse(input);
     expect(result).toBe(expected);
   });
