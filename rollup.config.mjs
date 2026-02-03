@@ -2,7 +2,7 @@ import typescript from "@rollup/plugin-typescript";
 
 /** @type {() => import('rollup').RollupOptions} */
 const createConfig = (format, dir) => ({
-  input: "src/index.ts",
+  input: "src/index.tsx",
   output: {
     dir,
     format,

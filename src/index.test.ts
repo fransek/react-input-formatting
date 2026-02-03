@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { format, parse, unformat } from ".";
+import { createInputState, format, parse, unformat } from ".";
 
 describe("format", () => {
   it.each([
@@ -14,9 +14,9 @@ describe("format", () => {
     { input: "123.", expected: "123." },
     { input: "", expected: "" },
   ])(
-    "format($input, $thousandSeparator, $decimalSeparator) should return $expected",
+    "should return $expected for input: $input, thousandSeparator: $thousandSeparator, decimalSeparator: $decimalSeparator",
     ({ input, thousandSeparator, decimalSeparator, expected }) => {
-      const result = format(input, thousandSeparator, decimalSeparator);
+      const result = format(input, { thousandSeparator, decimalSeparator });
       expect(result).toBe(expected);
     },
   );
@@ -43,9 +43,9 @@ describe("unformat", () => {
     { input: "123..", expected: "123." },
     { input: "123.456.789", expected: "123.456789" },
   ])(
-    "unformat($input, $thousandSeparator, $decimalSeparator) should return $expected",
+    "should return $expected for input: $input, thousandSeparator: $thousandSeparator, decimalSeparator: $decimalSeparator",
     ({ input, thousandSeparator, decimalSeparator, expected }) => {
-      const result = unformat(input, thousandSeparator, decimalSeparator);
+      const result = unformat(input, { thousandSeparator, decimalSeparator });
       expect(result).toBe(expected);
     },
   );
@@ -64,8 +64,48 @@ describe("parse", () => {
     { input: "-", expected: undefined },
     { input: ".", expected: undefined },
     { input: "", expected: undefined },
-  ])("parse($input) should return $expected", ({ input, expected }) => {
+  ])("should return $expected for input: $input", ({ input, expected }) => {
     const result = parse(input);
     expect(result).toBe(expected);
+  });
+});
+
+describe("createInputState", () => {
+  it.each([
+    {
+      input: "1234",
+      expected: { formatted: "1,234", raw: "1234", parsed: 1234 },
+    },
+    {
+      input: "1234.",
+      expected: { formatted: "1,234.", raw: "1234.", parsed: 1234 },
+    },
+    {
+      input: "1234.56",
+      expected: { formatted: "1,234.56", raw: "1234.56", parsed: 1234.56 },
+    },
+    {
+      input: "0",
+      expected: { formatted: "0", raw: "0", parsed: 0 },
+    },
+    {
+      input: ".",
+      expected: { formatted: "0.", raw: "0.", parsed: 0 },
+    },
+    {
+      input: "-",
+      expected: { formatted: "-", raw: "-", parsed: undefined },
+    },
+    {
+      input: "-.",
+      expected: { formatted: "-0.", raw: "-0.", parsed: -0 },
+    },
+    {
+      input: "",
+      expected: { formatted: "", raw: "", parsed: undefined },
+    },
+  ])("should return $expected for input: $input", ({ input, expected }) => {
+    const result = createInputState(input);
+    expect(result).toEqual(expected);
   });
 });
