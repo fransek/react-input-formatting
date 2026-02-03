@@ -71,9 +71,15 @@ export function formatInput(
 
   const offset = nextCaretOffset - prevCaretOffset;
   const newPos = caretPos + offset;
-  event.target.value = formatted;
 
-  requestAnimationFrame(() => event.target.setSelectionRange(newPos, newPos));
+  requestAnimationFrame(() => {
+    try {
+      event.target.value = formatted;
+      event.target.setSelectionRange(newPos, newPos);
+    } catch {
+      // Ignore errors (e.g., input is no longer focused)
+    }
+  });
 
   return {
     formatted,

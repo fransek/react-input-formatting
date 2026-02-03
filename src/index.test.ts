@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { format, parse, unformat } from ".";
+import { createInputState, format, parse, unformat } from ".";
 
 describe("format", () => {
   it.each([
@@ -67,5 +67,45 @@ describe("parse", () => {
   ])("should return $expected for input: $input", ({ input, expected }) => {
     const result = parse(input);
     expect(result).toBe(expected);
+  });
+});
+
+describe("createInputState", () => {
+  it.each([
+    {
+      input: "1234",
+      expected: { formatted: "1,234", raw: "1234", parsed: 1234 },
+    },
+    {
+      input: "1234.",
+      expected: { formatted: "1,234.", raw: "1234.", parsed: 1234 },
+    },
+    {
+      input: "1234.56",
+      expected: { formatted: "1,234.56", raw: "1234.56", parsed: 1234.56 },
+    },
+    {
+      input: "0",
+      expected: { formatted: "0", raw: "0", parsed: 0 },
+    },
+    {
+      input: ".",
+      expected: { formatted: "0.", raw: "0.", parsed: 0 },
+    },
+    {
+      input: "-",
+      expected: { formatted: "-", raw: "-", parsed: undefined },
+    },
+    {
+      input: "-.",
+      expected: { formatted: "-0.", raw: "-0.", parsed: -0 },
+    },
+    {
+      input: "",
+      expected: { formatted: "", raw: "", parsed: undefined },
+    },
+  ])("should return $expected for input: $input", ({ input, expected }) => {
+    const result = createInputState(input);
+    expect(result).toEqual(expected);
   });
 });

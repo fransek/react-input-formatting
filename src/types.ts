@@ -28,8 +28,8 @@ export interface Format {
   format: (raw: string) => string;
   /** Unformats a formatted input string */
   unformat: (formatted: string) => string;
-  /** Parses a formatted input string */
-  parse: (formatted: string) => number | undefined;
+  /** Parses a raw input string */
+  parse: (raw: string) => number | undefined;
   /** Formats an input event and returns the new InputState */
   formatInput: (event: React.ChangeEvent<HTMLInputElement>) => InputState;
   /** Creates an InputState from a raw input string */
