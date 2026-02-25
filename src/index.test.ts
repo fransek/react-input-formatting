@@ -13,10 +13,34 @@ describe("format", () => {
     { input: "-1234.56", expected: "-1,234.56" },
     { input: "123.", expected: "123." },
     { input: "", expected: "" },
+    { input: "1234.56", prefix: "$", expected: "$1,234.56" },
+    { input: "-1234.56", prefix: "$", expected: "-$1,234.56" },
+    { input: "1234.56", suffix: "%", expected: "1,234.56%" },
+    { input: "-1234.56", suffix: "%", expected: "-1,234.56%" },
+    {
+      input: "1234.56",
+      prefix: "$",
+      suffix: " USD",
+      expected: "$1,234.56 USD",
+    },
+    { input: "", prefix: "$", expected: "" },
+    { input: "-", prefix: "$", expected: "-" },
   ])(
     "should return $expected for input: $input, thousandSeparator: $thousandSeparator, decimalSeparator: $decimalSeparator",
-    ({ input, thousandSeparator, decimalSeparator, expected }) => {
-      const result = format(input, { thousandSeparator, decimalSeparator });
+    ({
+      input,
+      thousandSeparator,
+      decimalSeparator,
+      prefix,
+      suffix,
+      expected,
+    }) => {
+      const result = format(input, {
+        thousandSeparator,
+        decimalSeparator,
+        prefix,
+        suffix,
+      });
       expect(result).toBe(expected);
     },
   );
@@ -42,10 +66,28 @@ describe("unformat", () => {
     { input: "0", expected: "0" },
     { input: "123..", expected: "123." },
     { input: "123.456.789", expected: "123.456789" },
+    { input: "$1,234.56", prefix: "$", expected: "1234.56" },
+    { input: "-$1,234.56", prefix: "$", expected: "-1234.56" },
+    { input: "1,234.56%", suffix: "%", expected: "1234.56" },
+    { input: "-1,234.56%", suffix: "%", expected: "-1234.56" },
+    { input: "$1,234.56%", prefix: "$", suffix: "%", expected: "1234.56" },
+    { input: "$", prefix: "$", expected: "" },
   ])(
     "should return $expected for input: $input, thousandSeparator: $thousandSeparator, decimalSeparator: $decimalSeparator",
-    ({ input, thousandSeparator, decimalSeparator, expected }) => {
-      const result = unformat(input, { thousandSeparator, decimalSeparator });
+    ({
+      input,
+      thousandSeparator,
+      decimalSeparator,
+      prefix,
+      suffix,
+      expected,
+    }) => {
+      const result = unformat(input, {
+        thousandSeparator,
+        decimalSeparator,
+        prefix,
+        suffix,
+      });
       expect(result).toBe(expected);
     },
   );

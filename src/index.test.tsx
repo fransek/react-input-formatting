@@ -161,3 +161,46 @@ describe("createFormat", () => {
     ).toThrow('Separators cannot be the minus sign ("-").');
   });
 });
+
+describe("prefix and suffix", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("should format with prefix", async () => {
+    render(<FormattedInput data-testid="formatted-input" prefix="$" />);
+    const input = screen.getByTestId("formatted-input") as HTMLInputElement;
+    await userEvent.type(input, "1234.56", { delay: 30 });
+    expect(input.value).toBe("$1,234.56");
+  });
+
+  it("should format with suffix", async () => {
+    render(<FormattedInput data-testid="formatted-input" suffix="%" />);
+    const input = screen.getByTestId("formatted-input") as HTMLInputElement;
+    await userEvent.type(input, "1234.56", { delay: 30 });
+    expect(input.value).toBe("1,234.56%");
+  });
+
+  it("should format with prefix and suffix", async () => {
+    render(
+      <FormattedInput data-testid="formatted-input" prefix="$" suffix=" USD" />,
+    );
+    const input = screen.getByTestId("formatted-input") as HTMLInputElement;
+    await userEvent.type(input, "1234.56", { delay: 30 });
+    expect(input.value).toBe("$1,234.56 USD");
+  });
+
+  it("should create input state with prefix and suffix correctly", () => {
+    const fmt = createFormat({ prefix: "$", suffix: "%" });
+    expect(fmt.createInputState("1234.56")).toEqual({
+      formatted: "$1,234.56%",
+      parsed: 1234.56,
+      raw: "1234.56",
+    });
+  });
+
+  it("should return empty string for empty value regardless of prefix/suffix", () => {
+    const fmt = createFormat({ prefix: "$", suffix: "%" });
+    expect(fmt.format("")).toBe("");
+  });
+});
