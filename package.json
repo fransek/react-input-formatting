@@ -29,6 +29,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
+    "sandbox": "pnpm -F sandbox",
     "dev": "concurrently -n rollup,sandbox \"rollup -c -w\" \"pnpm -F sandbox dev\"",
     "test": "vitest --run --passWithNoTests",
     "test:watch": "vitest",
