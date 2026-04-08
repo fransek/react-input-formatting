@@ -21,6 +21,10 @@ export interface FormatOptions {
   thousandSeparator?: string;
   /** The character used as decimal separator (default: ".") */
   decimalSeparator?: string;
+  /** A string to prepend to the formatted value (e.g., "$") */
+  prefix?: string;
+  /** A string to append to the formatted value (e.g., "%") */
+  suffix?: string;
 }
 
 export interface Format {

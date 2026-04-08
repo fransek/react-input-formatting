@@ -9,18 +9,41 @@ import {
 
 export function format(
   raw: string,
-  { thousandSeparator = ",", decimalSeparator = "." }: FormatOptions = {},
+  {
+    thousandSeparator = ",",
+    decimalSeparator = ".",
+    prefix = "",
+    suffix = "",
+  }: FormatOptions = {},
 ) {
-  const [int = "", frac] = raw.split(".");
+  const isNegative = raw.startsWith("-");
+  const absRaw = isNegative ? raw.slice(1) : raw;
+  const [int = "", frac] = absRaw.split(".");
   const formattedInt = int.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
-  return frac == null ? formattedInt : formattedInt + decimalSeparator + frac;
+  const numericPart =
+    frac == null ? formattedInt : formattedInt + decimalSeparator + frac;
+  if (numericPart === "") {
+    return isNegative ? "-" : "";
+  }
+  return (isNegative ? "-" : "") + prefix + numericPart + suffix;
 }
 
 export function unformat(
   formatted: string,
-  { thousandSeparator = ",", decimalSeparator = "." }: FormatOptions = {},
+  {
+    thousandSeparator = ",",
+    decimalSeparator = ".",
+    prefix = "",
+    suffix = "",
+  }: FormatOptions = {},
 ) {
-  let result = formatted
+  const isNegative = formatted.startsWith("-");
+  let str = isNegative ? formatted.slice(1) : formatted;
+  if (prefix && str.startsWith(prefix)) str = str.slice(prefix.length);
+  if (suffix && str.endsWith(suffix)) str = str.slice(0, -suffix.length);
+  str = (isNegative ? "-" : "") + str;
+
+  let result = str
     .replaceAll(thousandSeparator, "")
     .replaceAll(decimalSeparator, ".")
     .replaceAll(/[^\d.-]/g, "") // Remove invalid characters
@@ -50,9 +73,14 @@ export function parse(raw: string): number | undefined {
 
 export function formatInput(
   event: React.ChangeEvent<HTMLInputElement>,
-  { thousandSeparator = ",", decimalSeparator = "." }: FormatOptions = {},
+  {
+    thousandSeparator = ",",
+    decimalSeparator = ".",
+    prefix = "",
+    suffix = "",
+  }: FormatOptions = {},
 ): InputState {
-  const options = { thousandSeparator, decimalSeparator };
+  const options = { thousandSeparator, decimalSeparator, prefix, suffix };
   const value = event.target.value;
   const raw = unformat(value, options);
   const formatted = format(raw, options);
@@ -72,10 +100,19 @@ export function formatInput(
   const offset = nextCaretOffset - prevCaretOffset;
   const newPos = caretPos + offset;
 
+  // Clamp cursor to the editable region (outside prefix and suffix)
+  const sign = formatted.startsWith("-") ? "-" : "";
+  const hasContent = formatted.length > sign.length;
+  const minPos = hasContent ? sign.length + prefix.length : formatted.length;
+  const maxPos = hasContent
+    ? formatted.length - suffix.length
+    : formatted.length;
+  const clampedPos = Math.max(minPos, Math.min(newPos, maxPos));
+
   requestAnimationFrame(() => {
     try {
       event.target.value = formatted;
-      event.target.setSelectionRange(newPos, newPos);
+      event.target.setSelectionRange(clampedPos, clampedPos);
     } catch {
       // Ignore errors (e.g., input is no longer focused)
     }
@@ -90,9 +127,14 @@ export function formatInput(
 
 export function createInputState(
   initialValue: string,
-  { thousandSeparator = ",", decimalSeparator = "." }: FormatOptions = {},
+  {
+    thousandSeparator = ",",
+    decimalSeparator = ".",
+    prefix = "",
+    suffix = "",
+  }: FormatOptions = {},
 ): InputState {
-  const options = { thousandSeparator, decimalSeparator };
+  const options = { thousandSeparator, decimalSeparator, prefix, suffix };
   const raw = unformat(initialValue, options);
   const formatted = format(raw, options);
   const parsed = parse(raw);
@@ -143,8 +185,10 @@ function validateFormatOptions({
 export function createFormat({
   thousandSeparator = ",",
   decimalSeparator = ".",
+  prefix = "",
+  suffix = "",
 }: FormatOptions = {}): Format {
-  const options = { thousandSeparator, decimalSeparator };
+  const options = { thousandSeparator, decimalSeparator, prefix, suffix };
   validateFormatOptions(options);
 
   const FormattedInputWrapper = forwardRef<
@@ -168,7 +212,14 @@ export function createFormat({
 
 export const FormattedInput = forwardRef<HTMLInputElement, InputProps>(
   (
-    { decimalSeparator = ".", thousandSeparator = ",", onChange, ...props },
+    {
+      decimalSeparator = ".",
+      thousandSeparator = ",",
+      prefix = "",
+      suffix = "",
+      onChange,
+      ...props
+    },
     ref,
   ) => {
     return (
@@ -179,6 +230,8 @@ export const FormattedInput = forwardRef<HTMLInputElement, InputProps>(
           formatInput(e, {
             decimalSeparator,
             thousandSeparator,
+            prefix,
+            suffix,
           });
           onChange?.(e);
         }}
